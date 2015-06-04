@@ -1,0 +1,27 @@
+@(message: String)
+
+@main("Welcome to Play") {
+
+    <h4>stuff:</h4>
+    <div>
+        <input id="tosend" type="text" value="A MESSAGE TO THE SERVER"/>
+        <button onclick="doSend()">Send</button>
+    </div>
+    <div id="logdiv" style="width: 100%; height: 400px; white-space: pre;"></div>
+
+    <script type="text/javascript">
+        var ws = new WebSocket("ws://localhost:9000/ws");
+        ws.onmessage = function (event) {
+            window.console.info("received ws msg", event);
+            var log = document.getElementById('logdiv');
+            log.textContent = log.textContent + "Received: " + event.data + '\n';
+        };
+        ws.onopen = function () {
+            window.console.info("opened");
+            //ws.send("A MESSAGE TO THE SERVER")
+        };
+        window.doSend = function() {
+            ws.send(document.getElementById("tosend").value);
+        }
+    </script>
+}
